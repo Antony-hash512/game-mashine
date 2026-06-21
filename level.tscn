@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://level.gd" id="1_script"]
+[ext_resource type="AudioStream" path="res://assets/audio/music/The_Last_Platform.mp3" id="2_music"]
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+use_parent_material = true
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_music")
+volume_db = -12.0
