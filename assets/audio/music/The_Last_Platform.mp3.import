@@ -3,12 +3,12 @@
 importer="mp3"
 type="AudioStreamMP3"
 uid="uid://cll5xmamtgmb7"
-path="res://.godot/imported/The_Last_Platform.mp3-a697bd0ce499eb38867453817f78f440.mp3str"
+path="res://.godot/imported/The_Last_Platform.mp3-b83c9455504c207f15ca2b39883091e9.mp3str"
 
 [deps]
 
-source_file="res://assets/audio/sounds/The_Last_Platform.mp3"
-dest_files=["res://.godot/imported/The_Last_Platform.mp3-a697bd0ce499eb38867453817f78f440.mp3str"]
+source_file="res://assets/audio/music/The_Last_Platform.mp3"
+dest_files=["res://.godot/imported/The_Last_Platform.mp3-b83c9455504c207f15ca2b39883091e9.mp3str"]
 
 [params]
 
