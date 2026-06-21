@@ -1,42 +1,54 @@
-# Юридическая информация и Лицензирование
+# Legal Information and Licensing
 
-Авторские права (c) 2026 github.com/Antony-hash512. Все права защищены.
+Copyright (c) 2026 Antony-hash512. All rights reserved.
 
-## 1. Двойное лицензирование и права автора
-Исходный код данной демоверсии предоставляется сообществу на условиях лицензии **GNU GPLv3** (см. файл `LICENSE.GPLv3`). 
-Обратите внимание: как единственный оригинальный автор и правообладатель данного кода, я обладаю исключительными правами на него. Предоставление лицензии GPL сообществу никак не ограничивает мое собственное право и распространять этот код (включая его неопубликованные модификации) на условиях закрытой, проприетарной лицензии.
+> 🌐 **[Русская версия](LICENSE.ru.md)**
 
-## 2. Ассеты
+---
 
-Все графические ресурсы, спрайты, музыка и звуковые эффекты демоверсии (находящиеся в каталоге `res://assets/`) распространяются на условиях свободной лицензии **Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)**.
+## 1. Dual Licensing and Author's Rights
 
-Это означает, что вы имеете право свободно использовать, изменять и распространять данные материалы (в том числе в коммерческих целях), при соблюдении двух условий:
+The source code of this demo is provided to the community under the **GNU GPLv3** license (see `LICENSE.GPLv3`).
 
-1. Вы должны указать меня как оригинального автора.
-2. Если вы изменяете эти ассеты или создаете на их основе новые, вы обязаны распространять свои производные работы под этой же лицензией (CC BY-SA).
-    
-Полный текст лицензии доступен в файле `LICENSE.assets` в корне репозитория.
+Please note: as the sole original author and copyright holder of this code, I retain exclusive rights to it. Granting a GPL license to the community does not in any way restrict my own right to distribute this code (including unpublished modifications) under a closed, proprietary license.
 
-## 3. Подводные камни GPL для коммерческого использования
-Лицензия GNU GPLv3 разрешает коммерческое использование исходного кода кем угодно. Однако, если вы делаете форк и/или планируете коммерческий релиз, вы обязаны соблюдать все условия GPLv3:
-* Открыть весь ваш модифицированный исходный код (включая скрипты платформера).
-* Не использовать технические средства защиты авторских прав (DRM).
-* Не линковать код с проприетарными закрытыми библиотеками.
+## 2. Assets
 
-**Внимание:** Из-за этих ограничений выпуск форка под GPLv3 в таких магазинах как **Steam (при использовании Steamworks SDK и DRM), PlayStation Network или Nintendo eShop** юридически и технически невозможен т.к. это прямое нарушение условий GPL. 
+All graphical resources, sprites, music, and sound effects of the demo (located in the `res://assets/` directory) are distributed under the **Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)** license.
 
-## 4. Соглашение с контрибьюторами (CLA)
-Я могу принимать пулл-реквесты, однако, чтобы я мог продолжать поддерживать модель двойного лицензирования, любой код, отправленный в этот репозиторий, требует принятия оферты.
-Отправляя Pull Request, вы соглашаетесь передать мне авторские права (или предоставить безотзывную эксклюзивную лицензию) на любые ваши изменения в пределах данного репозитория. <!--При создании PR бот автоматически предложит вам ознакомиться с текстом соглашения и поставить галочку.--> Передача мне авторских прав не требуется при публикации форков в ваших собственных репозиториях, но это не освобождает вас от необходимости соблюдать условия GPLv3 и CC BY-SA 4.0 (обязательная ссылка на мой репозиторий, невозможность закрыть модифицированный код).
+This means you are free to use, modify, and distribute these materials (including for commercial purposes), subject to two conditions:
 
-## 5. Альтернативная коммерческая лицензия
-Если вы хотите использовать исходный код этого проекта для создания собственной игры и её выпуска на закрытых платформах (Steam, консоли), вам необходима коммерческая лицензия, освобождающая от ограничений GPLv3. Для получения от меня актуальной контактной информации по данному вопросу вы можете создать Issue с темой [Commercial] в данном репозитории на английском или русском языке".
-(примечание: я не считаю это сильно актуальным для мелких проектов, но данный шаблон с юридическими пояснениями возможно будет применяться в будущем для более крупных кодовых баз)
+1. You must credit me as the original author.
+2. If you modify these assets or create derivative works based on them, you must distribute your derivative works under the same license (CC BY-SA 4.0).
 
-## 6. Права Автора и Двойное лицензирование (подробности)
+The full license text is available in the `LICENSE.assets` file in the root of the repository.
 
-Являясь единственным автором и создателем исходного кода данного проекта, в соответствии с [Бернской конвенцией об охране литературных и художественных произведений](https://www.wipo.int/treaties/ru/ip/berne/) (ст. 2 и ст. 5), я обладаю исключительными авторскими правами на данный продукт с момента его создания.
+## 3. GPL Pitfalls for Commercial Use
 
-Предоставление исходного кода сообществу на условиях лицензии **GNU GPLv3** является моим добровольным решением и представляет собой неисключительную публичную оферту для третьих лиц. 
+The GNU GPLv3 license permits commercial use of the source code by anyone. However, if you fork this project and/or plan a commercial release, you must comply with all GPLv3 conditions:
 
-Данное действие никак не лишает меня, как правообладателя, моих законных прав. Я не обязан сам следовать условиям лицензии GPLv3 в отношении собственного кода и сохраняю за собой полное и безотзывное право закрывать модифицированный исходный код и распространять данные модификации.
+* You must open-source all of your modified source code (including platformer scripts).
+* You may not use Digital Rights Management (DRM) technology.
+* You may not link the code with proprietary closed-source libraries.
+
+**Important:** Due to these restrictions, releasing a GPLv3 fork on platforms such as **Steam (when using the Steamworks SDK and DRM), PlayStation Network, or Nintendo eShop** is legally and technically impossible, as it would constitute a direct violation of the GPL terms.
+
+## 4. Contributor License Agreement (CLA)
+
+I may accept pull requests; however, to allow me to continue maintaining the dual-licensing model, any code submitted to this repository requires acceptance of the following offer.
+
+By submitting a Pull Request, you agree to transfer copyright (or grant an irrevocable exclusive license) to me for any of your changes within this repository. <!-- A bot will automatically prompt you to review and accept the agreement when creating a PR. --> This copyright transfer is not required when publishing forks in your own repositories, but it does not exempt you from complying with the terms of GPLv3 and CC BY-SA 4.0 (mandatory attribution to my repository, prohibition on closing modified source code).
+
+## 5. Alternative Commercial License
+
+If you wish to use the source code of this project to create your own game and release it on closed platforms (Steam, consoles), you will need a commercial license that exempts you from the GPLv3 restrictions. To obtain my current contact information on this matter, please open an Issue with the subject line `[Commercial]` in this repository, in English or Russian.
+
+*(Note: I don't consider this highly relevant for small projects, but this legal template may be applied in the future to larger codebases.)*
+
+## 6. Author's Rights and Dual Licensing (Details)
+
+As the sole author and creator of the source code of this project, in accordance with the [Berne Convention for the Protection of Literary and Artistic Works](https://www.wipo.int/treaties/en/ip/berne/) (Articles 2 and 5), I hold exclusive copyright over this product from the moment of its creation.
+
+Making the source code available to the community under the **GNU GPLv3** license is my voluntary decision and constitutes a non-exclusive public offer to third parties.
+
+This in no way deprives me, as the copyright holder, of my legal rights. I am not obligated to follow the terms of the GPLv3 license with respect to my own code, and I retain full and irrevocable right to keep modified source code closed and to distribute such modifications.
