@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Asset Sheets Inspection</title>
+  <style>
+    body { background: #222; color: #fff; font-family: sans-serif; padding: 20px; }
+    .sheet-container { margin-bottom: 40px; }
+    .sheet-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #0df; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(8, 181px);
+      gap: 2px;
+      background: #444;
+      width: max-content;
+      border: 2px solid #555;
+    }
+    .cell {
+      width: 181px;
+      height: 181px;
+      background: #111;
+      position: relative;
+      overflow: hidden;
+    }
+    .cell img {
+      position: absolute;
+      image-rendering: pixelated;
+    }
+    .cell-label {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      background: rgba(0,0,0,0.85);
+      color: #0ff;
+      font-size: 11px;
+      font-family: monospace;
+      padding: 2px 4px;
+      z-index: 10;
+      border-radius: 3px;
+      border: 1px solid #088;
+    }
+  </style>
+</head>
+<body>
+  <h1>Asset Sheets Grid Slices (181x181 cells)</h1>
+  <div id="sheets"></div>
+  <script>
+    const sheets = ['player.png', 'player_alt.png', 'enemy_spider.png', 'tileset_grass.png', 'interactables.png'];
+    const container = document.getElementById('sheets');
+    sheets.forEach(sheetName => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'sheet-container';
+      
+      const title = document.createElement('div');
+      title.className = 'sheet-title';
+      title.textContent = sheetName;
+      wrapper.appendChild(title);
+      
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      
+      for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 8; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          
+          const label = document.createElement('div');
+          label.className = 'cell-label';
+          label.textContent = `R${r} C${c}`;
+          cell.appendChild(label);
+          
+          const img = document.createElement('img');
+          img.src = 'assets/images/' + sheetName;
+          img.style.left = `-${c * 181}px`;
+          img.style.top = `-${r * 181}px`;
+          cell.appendChild(img);
+          grid.appendChild(cell);
+        }
+      }
+      wrapper.appendChild(grid);
+      container.appendChild(wrapper);
+    });
+  </script>
+</body>
+</html>
