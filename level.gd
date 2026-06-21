@@ -49,12 +49,13 @@ func setup_tileset() -> void:
 		# Настраиваем коллайдер для этого тайла
 		var tile_data = atlas_source.get_tile_data(Vector2i(0, 0), 0)
 		if tile_data:
-			# Коллайдер на всю ячейку 180x180
+			# Коллайдер только на видимую часть плитки (высота 117 пикселей от верха)
+			# Относительно центра ячейки (90, 90): верх равен -90, низ равен -90 + 117 = +27
 			var collision_points = PackedVector2Array([
 				Vector2(-TILE_SIZE / 2.0, -TILE_SIZE / 2.0),
 				Vector2(TILE_SIZE / 2.0, -TILE_SIZE / 2.0),
-				Vector2(TILE_SIZE / 2.0, TILE_SIZE / 2.0),
-				Vector2(-TILE_SIZE / 2.0, TILE_SIZE / 2.0)
+				Vector2(TILE_SIZE / 2.0, 27.0),
+				Vector2(-TILE_SIZE / 2.0, 27.0)
 			])
 			tile_data.add_collision_polygon(0)
 			tile_data.set_collision_polygon_points(0, 0, collision_points)

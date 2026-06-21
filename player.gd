@@ -4,7 +4,7 @@ extends CharacterBody2D
 @export var speed: float = 400.0
 @export var acceleration: float = 1800.0
 @export var friction: float = 1400.0
-@export var jump_velocity: float = -800.0
+@export var jump_velocity: float = -1050.0
 
 # Сила тяжести
 var gravity: float = 2000.0
