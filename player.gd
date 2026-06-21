@@ -5,6 +5,7 @@ extends CharacterBody2D
 @export var acceleration: float = 1800.0
 @export var friction: float = 1400.0
 @export var jump_velocity: float = -1250.0
+@export var running_jump_boost: float = 1.5
 
 # Сила тяжести
 var gravity: float = 2000.0
@@ -38,6 +39,9 @@ const LANDING_DURATION: float = 0.20 # Длительность приземле
 # Переменная для отслеживания состояния "в воздухе" в предыдущем кадре
 var was_in_air: bool = false
 
+# Состояние прыжка с разбега (дает повышенную горизонтальную скорость в воздухе)
+var is_running_jump: bool = false
+
 func _physics_process(delta: float) -> void:
 	# 1. Применение гравитации
 	if not is_on_floor():
@@ -51,6 +55,7 @@ func _physics_process(delta: float) -> void:
 			is_landing = true
 			landing_timer = LANDING_DURATION
 			was_in_air = false
+			is_running_jump = false # Сбрасываем прыжок с разбега при приземлении
 
 	# 2. Обработка таймера приземления
 	if is_landing:
@@ -64,16 +69,24 @@ func _physics_process(delta: float) -> void:
 		velocity.y = jump_velocity
 		is_landing = false
 		sprite.region_enabled = false
+		
+		# Если скорость бега перед прыжком была высокой (>70% от максимальной), прыгаем с разбега
+		if abs(velocity.x) > speed * 0.7:
+			is_running_jump = true
+		else:
+			is_running_jump = false
+			
 		if jump_sfx and jump_sfx.stream:
 			jump_sfx.play()
 
 	# 4. Горизонтальное движение и трение/ускорение
 	var direction := Input.get_axis("move_left", "move_right")
 	
-	# Во время жесткого приземления можно слегка ограничить скорость движения (по желанию)
 	var current_speed = speed
 	if is_landing:
 		current_speed = speed * 0.4 # Замедляем игрока при приземлении
+	elif not is_on_floor() and is_running_jump:
+		current_speed = speed * running_jump_boost # Увеличиваем предел горизонтальной скорости в прыжке с разбега
 		
 	if direction != 0:
 		velocity.x = move_toward(velocity.x, direction * current_speed, acceleration * delta)
