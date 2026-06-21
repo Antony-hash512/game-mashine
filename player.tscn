@@ -1,22 +1,22 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://player.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/images/player.png" id="2_texture"]
+[ext_resource type="Texture2D" path="res://assets/images/player_alt.png" id="2_texture"]
 [ext_resource type="AudioStream" path="res://assets/audio/sounds/sfx_jump_16bit_quality_01.wav" id="3_jump_sound"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
-size = Vector2(64, 140)
+size = Vector2(64, 208)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_script")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_texture")
-hframes = 9
-vframes = 7
+hframes = 10
+vframes = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 8)
+position = Vector2(0, 75)
 shape = SubResource("RectangleShape2D_player")
 
 [node name="Camera2D" type="Camera2D" parent="."]

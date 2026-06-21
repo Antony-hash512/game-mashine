@@ -13,45 +13,77 @@ var gravity: float = 2000.0
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var jump_sfx: AudioStreamPlayer2D = $JumpSFX
 
-# Списки кадров для анимации из player.png (сетка 9x7)
+# Списки кадров для анимации из player_alt.png (сетка 180x360, Hframes=10, Vframes=3)
 const IDLE_FRAMES = [0, 1]
-const RUN_FRAMES = [3, 4, 5, 6, 7, 9, 10]
-const JUMP_FRAME = 23
-const FALL_FRAME = 44
+const RUN_FRAMES = [2, 3, 4, 5, 6]
+const JUMP_FRAME = 10
+const PEAK_FRAME = 11
+const FALL_FRAME = 12
 
-# Таймер анимации в коде для простоты
+# Координаты региона для трехтайлового приземления
+# Левый верхний угол ячейки R1 C3 в сетке 180x360: X = 3 * 180 = 540, Y = 1 * 360 = 360
+# Ширина 3 тайла = 540, Высота 1 тайл = 360
+const LAND_REGION_RECT = Rect2(540, 360, 540, 360)
+
+# Таймер анимации в коде
 var anim_timer: float = 0.0
 var anim_frame_index: int = 0
-const ANIM_SPEED: float = 0.12 # Время между кадрами (120 мс)
+const ANIM_SPEED: float = 0.12
+
+# Состояние приземления
+var is_landing: bool = false
+var landing_timer: float = 0.0
+const LANDING_DURATION: float = 0.20 # Длительность приземления (200 мс)
+
+# Переменная для отслеживания состояния "в воздухе" в предыдущем кадре
+var was_in_air: bool = false
 
 func _physics_process(delta: float) -> void:
 	# 1. Применение гравитации
 	if not is_on_floor():
 		velocity.y += gravity * delta
-		# Ограничение максимальной скорости падения
 		if velocity.y > 1000.0:
 			velocity.y = 1000.0
+		was_in_air = true
+	else:
+		# Обработка момента приземления на землю
+		if was_in_air:
+			is_landing = true
+			landing_timer = LANDING_DURATION
+			was_in_air = false
 
-	# 2. Обработка прыжка
+	# 2. Обработка таймера приземления
+	if is_landing:
+		landing_timer -= delta
+		if landing_timer <= 0.0:
+			is_landing = false
+			sprite.region_enabled = false
+
+	# 3. Обработка прыжка
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
 		velocity.y = jump_velocity
+		is_landing = false
+		sprite.region_enabled = false
 		if jump_sfx and jump_sfx.stream:
 			jump_sfx.play()
 
-	# 3. Горизонтальное движение и трение/ускорение
+	# 4. Горизонтальное движение и трение/ускорение
 	var direction := Input.get_axis("move_left", "move_right")
+	
+	# Во время жесткого приземления можно слегка ограничить скорость движения (по желанию)
+	var current_speed = speed
+	if is_landing:
+		current_speed = speed * 0.4 # Замедляем игрока при приземлении
+		
 	if direction != 0:
-		# Ускорение персонажа
-		velocity.x = move_toward(velocity.x, direction * speed, acceleration * delta)
-		# Поворот спрайта
+		velocity.x = move_toward(velocity.x, direction * current_speed, acceleration * delta)
 		sprite.flip_h = direction < 0
 	else:
-		# Трение и замедление при отсутствии ввода
 		velocity.x = move_toward(velocity.x, 0, friction * delta)
 
 	move_and_slide()
 
-	# 4. Проигрывание анимаций
+	# 5. Проигрывание анимаций
 	update_animations(delta, direction)
 
 func update_animations(delta: float, direction: float) -> void:
@@ -60,6 +92,14 @@ func update_animations(delta: float, direction: float) -> void:
 		anim_timer = 0.0
 		anim_frame_index += 1
 
+	# Если проигрывается анимация приземления
+	if is_landing:
+		sprite.region_enabled = true
+		sprite.region_rect = LAND_REGION_RECT
+		return
+	
+	# Стандартные анимации
+	sprite.region_enabled = false
 	if is_on_floor():
 		if abs(velocity.x) > 10.0:
 			# Анимация бега
@@ -70,8 +110,10 @@ func update_animations(delta: float, direction: float) -> void:
 			var frame_idx = anim_frame_index % IDLE_FRAMES.size()
 			sprite.frame = IDLE_FRAMES[frame_idx]
 	else:
-		# Анимация в воздухе
-		if velocity.y < 0:
+		# Анимация в воздухе в зависимости от вертикальной скорости
+		if velocity.y < -150.0:
 			sprite.frame = JUMP_FRAME
-		else:
+		elif velocity.y > 150.0:
 			sprite.frame = FALL_FRAME
+		else:
+			sprite.frame = PEAK_FRAME
