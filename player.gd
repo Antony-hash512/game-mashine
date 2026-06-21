@@ -86,7 +86,7 @@ func _physics_process(delta: float) -> void:
 	if is_landing:
 		current_speed = speed * 0.4 # Замедляем игрока при приземлении
 	elif not is_on_floor() and is_running_jump:
-		current_speed = speed * running_jump_boost # Увеличиваем предел горизонтальной скорости в прыжке с разбега
+		current_speed = speed * running_jump_boost # Увеличиваем предел горизонтальной скорости в прыжке с разбега на 50%
 		
 	if direction != 0:
 		velocity.x = move_toward(velocity.x, direction * current_speed, acceleration * delta)
