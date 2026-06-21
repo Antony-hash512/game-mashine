@@ -43,6 +43,9 @@ func setup_tileset() -> void:
 		# Создаем тайл в координатах атласа R0 C0 (строка 0, колонка 0)
 		atlas_source.create_tile(Vector2i(0, 0))
 		
+		# Сначала добавляем источник в тайлсет, чтобы связать с физическим слоем
+		tileset.add_source(atlas_source, 0)
+		
 		# Настраиваем коллайдер для этого тайла
 		var tile_data = atlas_source.get_tile_data(Vector2i(0, 0), 0)
 		if tile_data:
@@ -55,8 +58,6 @@ func setup_tileset() -> void:
 			])
 			tile_data.add_collision_polygon(0)
 			tile_data.set_collision_polygon_points(0, 0, collision_points)
-		
-		tileset.add_source(atlas_source, 0)
 	
 	tile_map_layer.tile_set = tileset
 
