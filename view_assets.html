@@ -45,40 +45,60 @@
   <h1>Asset Sheets Grid Slices (180x180 cells)</h1>
   <div id="sheets"></div>
   <script>
-    const sheets = ['player.png', 'player_alt.png', 'enemy_spider.png', 'tileset_grass.png', 'interactables.png'];
+    const sheets = [
+      'player.png', 
+      'player_alt.png', 
+      'enemy_spider.png', 
+      'tileset_grass.png', 
+      'tileset_industrial.png',
+      'effects.png',
+      'hazards_and_drones.png',
+      'interactables.png'
+    ];
     const container = document.getElementById('sheets');
+    
     sheets.forEach(sheetName => {
       const wrapper = document.createElement('div');
       wrapper.className = 'sheet-container';
-      
-      const title = document.createElement('div');
-      title.className = 'sheet-title';
-      title.textContent = sheetName;
-      wrapper.appendChild(title);
-      
-      const grid = document.createElement('div');
-      grid.className = 'grid';
-      
-      for (let r = 0; r < 6; r++) {
-        for (let c = 0; c < 8; c++) {
-          const cell = document.createElement('div');
-          cell.className = 'cell';
-          
-          const label = document.createElement('div');
-          label.className = 'cell-label';
-          label.textContent = `R${r} C${c}`;
-          cell.appendChild(label);
-          
-          const img = document.createElement('img');
-          img.src = 'assets/images/' + sheetName;
-          img.style.left = `-${c * 180}px`;
-          img.style.top = `-${r * 180}px`;
-          cell.appendChild(img);
-          grid.appendChild(cell);
-        }
-      }
-      wrapper.appendChild(grid);
       container.appendChild(wrapper);
+      
+      const imgObj = new Image();
+      imgObj.src = 'assets/images/' + sheetName;
+      imgObj.onload = function() {
+        const w = imgObj.naturalWidth;
+        const h = imgObj.naturalHeight;
+        const cols = Math.floor(w / 180);
+        const rows = Math.floor(h / 180);
+        
+        const title = document.createElement('div');
+        title.className = 'sheet-title';
+        title.textContent = `${sheetName} (${w}x${h}px, ${cols}x${rows} cells)`;
+        wrapper.appendChild(title);
+        
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+        grid.style.gridTemplateColumns = `repeat(${cols}, 180px)`;
+        
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            
+            const label = document.createElement('div');
+            label.className = 'cell-label';
+            label.textContent = `R${r} C${c}`;
+            cell.appendChild(label);
+            
+            const img = document.createElement('img');
+            img.src = 'assets/images/' + sheetName;
+            img.style.left = `-${c * 180}px`;
+            img.style.top = `-${r * 180}px`;
+            cell.appendChild(img);
+            grid.appendChild(cell);
+          }
+        }
+        wrapper.appendChild(grid);
+      };
     });
   </script>
 </body>
