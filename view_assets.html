@@ -9,15 +9,15 @@
     .sheet-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #0df; }
     .grid {
       display: grid;
-      grid-template-columns: repeat(8, 181px);
+      grid-template-columns: repeat(8, 180px);
       gap: 2px;
       background: #444;
       width: max-content;
       border: 2px solid #555;
     }
     .cell {
-      width: 181px;
-      height: 181px;
+      width: 180px;
+      height: 180px;
       background: #111;
       position: relative;
       overflow: hidden;
@@ -42,7 +42,7 @@
   </style>
 </head>
 <body>
-  <h1>Asset Sheets Grid Slices (181x181 cells)</h1>
+  <h1>Asset Sheets Grid Slices (180x180 cells)</h1>
   <div id="sheets"></div>
   <script>
     const sheets = ['player.png', 'player_alt.png', 'enemy_spider.png', 'tileset_grass.png', 'interactables.png'];
@@ -71,8 +71,8 @@
           
           const img = document.createElement('img');
           img.src = 'assets/images/' + sheetName;
-          img.style.left = `-${c * 181}px`;
-          img.style.top = `-${r * 181}px`;
+          img.style.left = `-${c * 180}px`;
+          img.style.top = `-${r * 180}px`;
           cell.appendChild(img);
           grid.appendChild(cell);
         }
