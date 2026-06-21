@@ -109,10 +109,15 @@ func update_animations(delta: float, direction: float) -> void:
 	if is_landing:
 		sprite.region_enabled = true
 		sprite.region_rect = LAND_REGION_RECT
+		sprite.hframes = 1
+		sprite.vframes = 1
+		sprite.frame = 0
 		return
 	
 	# Стандартные анимации
 	sprite.region_enabled = false
+	sprite.hframes = 10
+	sprite.vframes = 3
 	if is_on_floor():
 		if abs(velocity.x) > 10.0:
 			# Анимация бега
