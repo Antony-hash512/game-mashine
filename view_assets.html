@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Asset Sheets Inspection</title>
   <style>
-    body { background: #222; color: #fff; font-family: sans-serif; padding: 20px; }
-    .sheet-container { margin-bottom: 40px; }
-    .sheet-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #0df; }
+    body {
+      background: #222;
+      color: #fff;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    .sheet-container {
+      margin-bottom: 40px;
+    }
+
+    .sheet-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #0df;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(8, 180px);
@@ -15,6 +31,7 @@
       width: max-content;
       border: 2px solid #555;
     }
+
     .cell {
       width: 180px;
       height: 180px;
@@ -22,15 +39,17 @@
       position: relative;
       overflow: hidden;
     }
+
     .cell img {
       position: absolute;
       image-rendering: pixelated;
     }
+
     .cell-label {
       position: absolute;
       top: 2px;
       left: 2px;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0, 0, 0, 0.85);
       color: #0ff;
       font-size: 11px;
       font-family: monospace;
@@ -42,10 +61,12 @@
       user-select: none;
       transition: all 0.15s ease;
     }
+
     .cell-label:hover {
       background: #088;
       color: #fff;
     }
+
     .cell-label.copied {
       background: #0f5;
       color: #000;
@@ -53,54 +74,56 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Asset Sheets Grid Slices (180x180 cells)</h1>
   <div id="sheets"></div>
   <script>
     const sheets = [
-      'player.png', 
-      'player_alt.png', 
-      'enemy_spider.png', 
-      'tileset_grass.png', 
+      'player.png',
+      'player_alt.png',
+      'run-test1.png',
+      'enemy_spider.png',
+      'tileset_grass.png',
       'tileset_industrial.png',
       'effects.png',
       'hazards_and_drones.png',
       'interactables.png'
     ];
     const container = document.getElementById('sheets');
-    
+
     sheets.forEach(sheetName => {
       const wrapper = document.createElement('div');
       wrapper.className = 'sheet-container';
       container.appendChild(wrapper);
-      
+
       const imgObj = new Image();
       imgObj.src = 'assets/images/' + sheetName;
-      imgObj.onload = function() {
+      imgObj.onload = function () {
         const w = imgObj.naturalWidth;
         const h = imgObj.naturalHeight;
         const cols = Math.floor(w / 180);
         const rows = Math.floor(h / 180);
-        
+
         const title = document.createElement('div');
         title.className = 'sheet-title';
         title.textContent = `${sheetName} (${w}x${h}px, ${cols}x${rows} cells)`;
         wrapper.appendChild(title);
-        
+
         const grid = document.createElement('div');
         grid.className = 'grid';
         grid.style.gridTemplateColumns = `repeat(${cols}, 180px)`;
-        
+
         for (let r = 0; r < rows; r++) {
           for (let c = 0; c < cols; c++) {
             const cell = document.createElement('div');
             cell.className = 'cell';
-            
+
             const label = document.createElement('div');
             label.className = 'cell-label';
             const coordText = `R${r}:C${c}`;
             label.textContent = coordText;
-            
+
             label.addEventListener('click', () => {
               navigator.clipboard.writeText(coordText).then(() => {
                 label.textContent = 'Copied!';
@@ -113,9 +136,9 @@
                 console.error('Failed to copy: ', err);
               });
             });
-            
+
             cell.appendChild(label);
-            
+
             const img = document.createElement('img');
             img.src = 'assets/images/' + sheetName;
             img.style.left = `-${c * 180}px`;
@@ -129,4 +152,5 @@
     });
   </script>
 </body>
+
 </html>

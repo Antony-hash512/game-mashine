@@ -13,7 +13,7 @@
         <extend top="1" />
       </frame>
     </set>
-    <set action="running">
+    <!--set action="running">
       <file>player_alt.png</file>
       <fps>8.33</fps>
       <frame>
@@ -36,7 +36,44 @@
         <from tile="R3:C4" />
         <extend top="1" />
       </frame>
+    </set-->
+    <set action="running">
+      <file>run-test1.png</file>
+      <fps>8.33</fps>
+      <frame>
+        <from tile="R1:C0" />
+        <extend top="1" />
+      </frame>
+      <frame>
+        <from tile="R1:C1" />
+        <extend top="1" />
+      </frame>
+      <frame>
+        <from tile="R1:C2" />
+        <extend top="1" />
+      </frame>
+      <frame>
+        <from tile="R1:C3" />
+        <extend top="1" />
+      </frame>
+      <frame>
+        <from tile="R1:C4" />
+        <extend top="1" />
+      </frame>
+      <frame>
+        <from tile="R1:C5" />
+        <extend top="1" />
+      </frame>
+      <frame>
+        <from tile="R1:C6" />
+        <extend top="1" />
+      </frame>
+      <frame>
+        <from tile="R1:C7" />
+        <extend top="1" />
+      </frame>
     </set>
+
     <set action="jumping_start">
       <file>player_alt.png</file>
       <frame>
