@@ -87,13 +87,14 @@ def validate_and_convert():
             # Инициализация структуры для экшена
             action_data = {
                 "file": None,
-                "fps": None,
+                "spf": None,
                 "frames": []
             }
             
             # Читаем содержимое <set>
             file_name = None
             fps_val = None
+            spf_val = None
             
             for child in s_set:
                 if child.tag == "file":
@@ -111,9 +112,15 @@ def validate_and_convert():
                 elif child.tag == "fps":
                     try:
                         fps_val = float((child.text or "").strip())
-                        action_data["fps"] = fps_val
                     except ValueError:
                         print(f"[Ошибка] Значение <fps> в экшене '{action_name}' группы '{object_name}' должно быть числом")
+                        sys.exit(1)
+                        
+                elif child.tag == "spf":
+                    try:
+                        spf_val = float((child.text or "").strip())
+                    except ValueError:
+                        print(f"[Ошибка] Значение <spf> в экшене '{action_name}' группы '{object_name}' должно быть числом")
                         sys.exit(1)
                         
                 elif child.tag == "frame":
@@ -170,6 +177,22 @@ def validate_and_convert():
                     print(f"[Ошибка] Неизвестный тег <{child.tag}> внутри <set> в экшене '{action_name}' группы '{object_name}'")
                     sys.exit(1)
                     
+            # Валидация fps и spf
+            if fps_val is not None and spf_val is not None:
+                print(f"[Ошибка] В экшене '{action_name}' группы '{object_name}' указаны одновременно и <fps>, и <spf>. Разрешено указывать только что-то одно.")
+                sys.exit(1)
+                
+            final_spf = None
+            if spf_val is not None:
+                final_spf = round(spf_val, 2)
+            elif fps_val is not None:
+                if fps_val <= 0:
+                    print(f"[Ошибка] Значение <fps> в экшене '{action_name}' группы '{object_name}' должно быть строго больше 0")
+                    sys.exit(1)
+                final_spf = round(1.0 / fps_val, 2)
+                
+            action_data["spf"] = final_spf
+            
             if not action_data["file"]:
                 print(f"[Ошибка] Экшен '{action_name}' группы '{object_name}' не содержит обязательного тега <file>")
                 sys.exit(1)
