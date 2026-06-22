@@ -118,7 +118,7 @@
         },
         "rotation": {
             "file": "tileset_grass.png",
-            "spf": null,
+            "spf": 0.25,
             "frames": [
                 [
                     0,
@@ -148,7 +148,7 @@
         },
         "explosion": {
             "file": "interactables.png",
-            "spf": null,
+            "spf": 0.25,
             "frames": [
                 [
                     0,

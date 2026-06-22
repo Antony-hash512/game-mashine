@@ -110,6 +110,7 @@
       </frame>
     </set>
     <set action="rotation">
+      <fps>4</fps>
       <file>tileset_grass.png</file>
       <frame>
         <from tile="R4:C0" />
@@ -125,6 +126,7 @@
       </frame>
     </set>
     <set action="explosion">
+      <fps>4</fps>
       <file>interactables.png</file>
       <frame>
         <from tile="R1:C0" />
