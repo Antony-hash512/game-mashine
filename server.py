@@ -3,8 +3,7 @@ import http.server
 import socketserver
 import os
 import sys
-
-PORT = 8200
+import argparse
 
 class GodotHTML5HTTPServer(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -15,9 +14,13 @@ class GodotHTML5HTTPServer(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
 def main():
-    # If a directory argument is provided, change to that directory
-    if len(sys.argv) > 1:
-        os.chdir(sys.argv[1])
+    parser = argparse.ArgumentParser(description="Godot 4 Web Server with COOP/COEP headers")
+    parser.add_argument("directory", nargs="?", default=".", help="Directory to serve")
+    parser.add_argument("-p", "--port", type=int, default=18200, help="Port to bind to (default: 18200)")
+    args = parser.parse_args()
+    
+    os.chdir(args.directory)
+    PORT = args.port
     
     print(f"Starting Godot 4 Web Server on http://localhost:{PORT}")
     print(f"Serving directory: {os.getcwd()}")
