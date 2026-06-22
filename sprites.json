@@ -104,6 +104,18 @@
         }
     },
     "coin": {
+        "static": {
+            "file": "tileset_grass.png",
+            "spf": null,
+            "frames": [
+                [
+                    0,
+                    720,
+                    180,
+                    180
+                ]
+            ]
+        },
         "rotation": {
             "file": "tileset_grass.png",
             "spf": null,
