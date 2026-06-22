@@ -1,0 +1,106 @@
+{
+    "player": {
+        "idle": {
+            "file": "player_alt.png",
+            "fps": null,
+            "frames": [
+                [
+                    0,
+                    0,
+                    180,
+                    360
+                ],
+                [
+                    180,
+                    0,
+                    180,
+                    360
+                ]
+            ]
+        },
+        "running": {
+            "file": "player_alt.png",
+            "fps": null,
+            "frames": [
+                [
+                    360,
+                    0,
+                    180,
+                    360
+                ],
+                [
+                    540,
+                    0,
+                    180,
+                    360
+                ],
+                [
+                    720,
+                    0,
+                    180,
+                    360
+                ],
+                [
+                    900,
+                    0,
+                    180,
+                    360
+                ],
+                [
+                    1080,
+                    0,
+                    180,
+                    360
+                ]
+            ]
+        },
+        "jumping_start": {
+            "file": "player_alt.png",
+            "fps": null,
+            "frames": [
+                [
+                    0,
+                    360,
+                    180,
+                    360
+                ]
+            ]
+        },
+        "jumping_top_point": {
+            "file": "player_alt.png",
+            "fps": null,
+            "frames": [
+                [
+                    180,
+                    540,
+                    180,
+                    180
+                ]
+            ]
+        },
+        "falling": {
+            "file": "player_alt.png",
+            "fps": null,
+            "frames": [
+                [
+                    360,
+                    360,
+                    180,
+                    360
+                ]
+            ]
+        },
+        "landing": {
+            "file": "player_alt.png",
+            "fps": null,
+            "frames": [
+                [
+                    540,
+                    540,
+                    540,
+                    180
+                ]
+            ]
+        }
+    }
+}
