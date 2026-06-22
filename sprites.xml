@@ -37,7 +37,7 @@
         <extend top="1" />
       </frame>
     </set>
-    <!--set action="running">
+    <set action="running_unused1">
       <file>run-test1.png</file>
       <fps>8.33</fps>
       <frame>
@@ -72,7 +72,7 @@
         <from tile="R1:C7" />
         <extend top="1" />
       </frame>
-    </set-->
+    </set>
 
     <set action="jumping_start">
       <file>player_alt.png</file>
