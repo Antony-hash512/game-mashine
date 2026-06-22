@@ -10,8 +10,11 @@ config_version=5
 
 [application]
 
+config/name="game-mashine"
+config/version="0.1.0"
 run/main_scene="res://level.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://icon.svg"
 
 [display]
 
