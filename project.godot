@@ -10,20 +10,17 @@ config_version=5
 
 [application]
 
-config/name="game-mashine"
-config/features=PackedStringArray("4.7", "GL Compatibility")
-config/icon="res://icon.svg"
 run/main_scene="res://level.tscn"
-
+config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [display]
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
-[physics]
+[editor_plugins]
 
-3d/physics_engine="Jolt Physics"
+enabled=PackedStringArray("res://addons/version_sync/plugin.cfg")
 
 [input]
 
@@ -47,12 +44,15 @@ jump={
 ]
 }
 
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
 [rendering]
 
+rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
-rendering_device/driver.windows="d3d12"
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true
 texture/canvas_textures/default_texture_filter=0
-
