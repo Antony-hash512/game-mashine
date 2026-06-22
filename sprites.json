@@ -2,7 +2,7 @@
     "player": {
         "idle": {
             "file": "player_alt.png",
-            "fps": null,
+            "fps": 8.33,
             "frames": [
                 [
                     0,
@@ -20,7 +20,7 @@
         },
         "running": {
             "file": "player_alt.png",
-            "fps": null,
+            "fps": 8.33,
             "frames": [
                 [
                     360,
@@ -56,7 +56,7 @@
         },
         "jumping_start": {
             "file": "player_alt.png",
-            "fps": null,
+            "fps": 8.33,
             "frames": [
                 [
                     0,
@@ -68,7 +68,7 @@
         },
         "jumping_top_point": {
             "file": "player_alt.png",
-            "fps": null,
+            "fps": 8.33,
             "frames": [
                 [
                     180,
@@ -80,7 +80,7 @@
         },
         "falling": {
             "file": "player_alt.png",
-            "fps": null,
+            "fps": 8.33,
             "frames": [
                 [
                     360,
@@ -92,7 +92,7 @@
         },
         "landing": {
             "file": "player_alt.png",
-            "fps": null,
+            "fps": 8.33,
             "frames": [
                 [
                     540,
