@@ -14,22 +14,44 @@ var gravity: float = 2000.0
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var jump_sfx: AudioStreamPlayer2D = $JumpSFX
 
-# Списки кадров для анимации из player_alt.png (сетка 180x360, Hframes=10, Vframes=3)
-const IDLE_FRAMES = [0, 1]
-const RUN_FRAMES = [2, 3, 4, 5, 6]
-const JUMP_FRAME = 10
-const PEAK_FRAME = 11
-const FALL_FRAME = 12
+# Переменные для динамической анимации
+var sprite_config: Dictionary = {}
+var current_action: String = ""
+var _texture_cache: Dictionary = {}
 
-# Координаты региона для трехтайлового приземления
-# Левый верхний угол ячейки R1 C3 в сетке 180x360: X = 3 * 180 = 540, Y = 1 * 360 = 360
-# Ширина 3 тайла = 540, Высота 1 тайл = 360
-const LAND_REGION_RECT = Rect2(540, 360, 540, 360)
-
-# Таймер анимации в коде
 var anim_timer: float = 0.0
 var anim_frame_index: int = 0
-const ANIM_SPEED: float = 0.12
+
+func _ready() -> void:
+	load_sprite_config()
+
+func load_sprite_config() -> void:
+	var path = "res://sprites.json"
+	if FileAccess.file_exists(path):
+		var file = FileAccess.open(path, FileAccess.READ)
+		if file:
+			var json_text = file.get_as_text()
+			file.close()
+			
+			var parsed = JSON.parse_string(json_text)
+			if parsed is Dictionary and parsed.has("player"):
+				sprite_config = parsed["player"]
+			else:
+				push_error("Неверный формат sprites.json")
+		else:
+			push_error("Не удалось открыть sprites.json")
+	else:
+		push_error("Файл sprites.json не найден")
+
+func get_texture(file_name: String) -> Texture2D:
+	if not _texture_cache.has(file_name):
+		var path = "res://assets/images/" + file_name
+		if ResourceLoader.exists(path):
+			_texture_cache[file_name] = load(path)
+		else:
+			push_error("Текстура не найдена: " + path)
+			_texture_cache[file_name] = null
+	return _texture_cache[file_name]
 
 # Состояние приземления
 var is_landing: bool = false
@@ -62,13 +84,11 @@ func _physics_process(delta: float) -> void:
 		landing_timer -= delta
 		if landing_timer <= 0.0:
 			is_landing = false
-			sprite.region_enabled = false
 
 	# 3. Обработка прыжка
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
 		velocity.y = jump_velocity
 		is_landing = false
-		sprite.region_enabled = false
 		
 		# Если скорость бега перед прыжком была высокой (>70% от максимальной), прыгаем с разбега
 		if abs(velocity.x) > speed * 0.7:
@@ -99,39 +119,63 @@ func _physics_process(delta: float) -> void:
 	# 5. Проигрывание анимаций
 	update_animations(delta, direction)
 
-func update_animations(delta: float, direction: float) -> void:
+func update_animations(delta: float, _direction: float) -> void:
+	var action := ""
+	if is_landing:
+		action = "landing"
+	elif is_on_floor():
+		if abs(velocity.x) > 10.0:
+			action = "running"
+		else:
+			action = "idle"
+	else:
+		if velocity.y < -150.0:
+			action = "jumping_start"
+		elif velocity.y > 150.0:
+			action = "falling"
+		else:
+			action = "jumping_top_point"
+
+	play_action(action, delta)
+
+func play_action(action_name: String, delta: float) -> void:
+	if not sprite_config.has(action_name):
+		# Игнорируем экшены, не описанные для игрока в JSON, не падая с ошибкой
+		return
+
+	var action_data: Dictionary = sprite_config[action_name]
+	
+	if current_action != action_name:
+		current_action = action_name
+		anim_timer = 0.0
+		anim_frame_index = 0
+
+	var file_name: String = action_data.get("file", "")
+	if file_name != "":
+		var tex = get_texture(file_name)
+		if tex and sprite.texture != tex:
+			sprite.texture = tex
+
+	sprite.region_enabled = true
+	sprite.hframes = 1
+	sprite.vframes = 1
+	sprite.frame = 0
+
+	var frames: Array = action_data.get("frames", [])
+	if frames.is_empty():
+		return
+
+	var spf = action_data.get("spf")
+	var frame_delay: float = 0.12
+	if spf != null:
+		frame_delay = float(spf)
+
 	anim_timer += delta
-	if anim_timer >= ANIM_SPEED:
+	if anim_timer >= frame_delay:
 		anim_timer = 0.0
 		anim_frame_index += 1
 
-	# Если проигрывается анимация приземления
-	if is_landing:
-		sprite.region_enabled = true
-		sprite.region_rect = LAND_REGION_RECT
-		sprite.hframes = 1
-		sprite.vframes = 1
-		sprite.frame = 0
-		return
-	
-	# Стандартные анимации
-	sprite.region_enabled = false
-	sprite.hframes = 10
-	sprite.vframes = 3
-	if is_on_floor():
-		if abs(velocity.x) > 10.0:
-			# Анимация бега
-			var frame_idx = anim_frame_index % RUN_FRAMES.size()
-			sprite.frame = RUN_FRAMES[frame_idx]
-		else:
-			# Анимация покоя (Idle)
-			var frame_idx = anim_frame_index % IDLE_FRAMES.size()
-			sprite.frame = IDLE_FRAMES[frame_idx]
-	else:
-		# Анимация в воздухе в зависимости от вертикальной скорости
-		if velocity.y < -150.0:
-			sprite.frame = JUMP_FRAME
-		elif velocity.y > 150.0:
-			sprite.frame = FALL_FRAME
-		else:
-			sprite.frame = PEAK_FRAME
+	var current_frame_idx = anim_frame_index % frames.size()
+	var rect_arr = frames[current_frame_idx]
+	if rect_arr is Array and rect_arr.size() == 4:
+		sprite.region_rect = Rect2(rect_arr[0], rect_arr[1], rect_arr[2], rect_arr[3])
