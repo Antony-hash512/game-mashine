@@ -63,6 +63,12 @@ func setup_tileset() -> void:
 	tile_map_layer.tile_set = tileset
 
 func load_level() -> void:
+	if OS.has_feature("web"):
+		load_level_from_web()
+	else:
+		load_level_from_local()
+
+func load_level_from_local() -> void:
 	var file = FileAccess.open(LEVEL_FILE_PATH, FileAccess.READ)
 	if not file:
 		push_error("Не удалось открыть файл уровня по пути: " + LEVEL_FILE_PATH)
@@ -70,12 +76,57 @@ func load_level() -> void:
 		load_default_level()
 		return
 
+	var text = file.get_as_text()
+	file.close()
+	parse_level_data(text)
+
+func load_level_from_web() -> void:
+	var url = "level_test.txt"
+	if OS.has_feature("web"):
+		var resolved = JavaScriptBridge.eval("new URL('level_test.txt', window.location.href).href")
+		if resolved:
+			url = resolved
+
+	var http = HTTPRequest.new()
+	add_child(http)
+	http.request_completed.connect(func(result, response_code, headers, body):
+		http.queue_free()
+		_on_web_level_loaded(result, response_code, headers, body)
+	)
+	var err = http.request(url)
+	if err != OK:
+		push_error("Ошибка инициализации HTTP-запроса уровня: " + str(err))
+		http.queue_free()
+		load_default_level()
+
+func _on_web_level_loaded(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	if result == HTTPRequest.RESULT_SUCCESS and response_code == 200:
+		var text = body.get_string_from_utf8()
+		parse_level_data(text)
+	else:
+		push_warning("Не удалось скачать уровень через HTTP. Результат: %d, Код: %d. Попытка загрузить из ресурсов..." % [result, response_code])
+		if FileAccess.file_exists(LEVEL_FILE_PATH):
+			var file = FileAccess.open(LEVEL_FILE_PATH, FileAccess.READ)
+			if file:
+				var text = file.get_as_text()
+				file.close()
+				parse_level_data(text)
+				return
+		push_error("Не удалось найти упакованный уровень. Переключение на дефолтную генерацию.")
+		load_default_level()
+
+func parse_level_data(level_text: String) -> void:
 	var lines: Array[String] = []
-	while not file.eof_reached():
-		var line = file.get_line().strip_edges()
+	var raw_lines = level_text.split("\n")
+	for raw_line in raw_lines:
+		var line = raw_line.strip_edges()
 		if line.length() > 0:
 			lines.append(line)
-	file.close()
+
+	if lines.size() == 0:
+		push_error("Данные уровня пусты!")
+		load_default_level()
+		return
 
 	map_rows = lines.size()
 	map_cols = lines[0].length()
