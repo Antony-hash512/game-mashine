@@ -6,11 +6,11 @@
       <fps>2</fps>
       <frame>
         <center>R1:C0</center>
-        <top>R0</top>
+        <extend top="1" />
       </frame>
       <frame>
         <center>R1:C1</center>
-        <top>R0</top>
+        <extend top="1" />
       </frame>
     </set>
     <set action="running">
@@ -18,53 +18,51 @@
       <fps>8.33</fps>
       <frame>
         <center>R1:C2</center>
-        <top>R0</top>
+        <extend top="1" />
       </frame>
       <frame>
         <center>R1:C3</center>
-        <top>R0</top>
+        <extend top="1" />
       </frame>
       <frame>
         <center>R1:C4</center>
-        <top>R0</top>
+        <extend top="1" />
       </frame>
       <frame>
         <center>R1:C5</center>
-        <top>R0</top>
+        <extend top="1" />
       </frame>
       <frame>
         <center>R1:C6</center>
-        <top>R0</top>
+        <extend top="1" />
       </frame>
     </set>
     <set action="jumping_start">
       <file>player_alt.png</file>
       <frame>
         <center>R3:C0</center>
-        <top>R2</top>
+        <extend top="1" />
       </frame>
     </set>
     <set action="jumping_top_point">
       <file>player_alt.png</file>
       <frame>
         <center>R3:C1</center>
-        <top>R2</top>
+        <extend top="1" />
       </frame>
     </set>
     <set action="falling">
       <file>player_alt.png</file>
       <frame>
         <center>R3:C2</center>
-        <top>R2</top>
+        <extend top="1" />
       </frame>
     </set>
     <set action="landing">
       <file>player_alt.png</file>
       <frame>
         <center>R3:C4</center>
-        <top>R2</top>
-        <left>C3</left>
-        <right>C5</right>
+        <extend top="1" left="1" right="1" />
       </frame>
     </set>
   </group>

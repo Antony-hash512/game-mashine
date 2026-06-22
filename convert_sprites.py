@@ -140,31 +140,48 @@ def validate_and_convert():
                         print(f"[Ошибка] Ошибка парсинга <center> в экшене '{action_name}' группы '{object_name}': {e}")
                         sys.exit(1)
                         
-                    # Собираем все задействованные ячейки для этого кадра
-                    cells = [(c_row, c_col)]
+                    # Смещения по умолчанию
+                    top_offset = 0
+                    bottom_offset = 0
+                    left_offset = 0
+                    right_offset = 0
                     
-                    # Проверяем дополнительные теги смещений
+                    # Проверяем дочерние теги внутри <frame>
                     for sub in child:
                         if sub.tag == "center":
                             continue
-                        elif sub.tag in ("top", "left", "right"):
-                            sub_text = (sub.text or "").strip()
-                            try:
-                                # Если строка или колонка опущены, берем их из center
-                                r, c = parse_coord(sub_text, default_row=c_row, default_col=c_col)
-                                cells.append((r, c))
-                            except ValueError as e:
-                                print(f"[Ошибка] Ошибка парсинга <{sub.tag}> ('{sub_text}') в экшене '{action_name}' группы '{object_name}': {e}")
-                                sys.exit(1)
+                        elif sub.tag == "extend":
+                            # Парсим атрибуты смещения
+                            for attr, val in sub.attrib.items():
+                                if attr not in ("top", "bottom", "left", "right"):
+                                    print(f"[Ошибка] Неизвестный атрибут '{attr}' в теге <extend> в экшене '{action_name}' группы '{object_name}'")
+                                    sys.exit(1)
+                                try:
+                                    int_val = int(val)
+                                    if int_val < 0:
+                                        print(f"[Ошибка] Значение атрибута '{attr}' в <extend> в экшене '{action_name}' группы '{object_name}' должно быть положительным (найдено: {val})")
+                                        sys.exit(1)
+                                    
+                                    if attr == "top":
+                                        top_offset = int_val
+                                    elif attr == "bottom":
+                                        bottom_offset = int_val
+                                    elif attr == "left":
+                                        left_offset = int_val
+                                    elif attr == "right":
+                                        right_offset = int_val
+                                except ValueError:
+                                    print(f"[Ошибка] Значение атрибута '{attr}' в <extend> в экшене '{action_name}' группы '{object_name}' должно быть целым числом (найдено: '{val}')")
+                                    sys.exit(1)
                         else:
                             print(f"[Ошибка] Неизвестный тег <{sub.tag}> внутри <frame> в экшене '{action_name}' группы '{object_name}'")
                             sys.exit(1)
                             
                     # Вычисляем объединяющий Bounding Box в пикселях
-                    min_row = min(r for r, c in cells)
-                    max_row = max(r for r, c in cells)
-                    min_col = min(c for r, c in cells)
-                    max_col = max(c for r, c in cells)
+                    min_row = c_row - top_offset
+                    max_row = c_row + bottom_offset
+                    min_col = c_col - left_offset
+                    max_col = c_col + right_offset
                     
                     x = min_col * CELL_W
                     y = min_row * CELL_H
