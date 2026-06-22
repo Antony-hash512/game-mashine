@@ -37,7 +37,7 @@
         <extend top="1" />
       </frame>
     </set>
-    <set action="running_unused1">
+    <!--set action="running_unused1">
       <file>run-test1.png</file>
       <fps>8.33</fps>
       <frame>
@@ -72,8 +72,7 @@
         <from tile="R1:C7" />
         <extend top="1" />
       </frame>
-    </set>
-
+    </set-->
     <set action="jumping_start">
       <file>player_alt.png</file>
       <frame>
@@ -100,6 +99,38 @@
       <frame>
         <from tile="R5:C4" />
         <extend top="1" left="1" right="1" />
+      </frame>
+    </set>
+  </group>
+  <group object="coin">
+    <set action="rotation">
+      <file>tileset_grass.png</file>
+      <frame>
+        <from tile="R4:C0" />
+      </frame>
+      <frame>
+        <from tile="R4:C1" />
+      </frame>
+      <frame>
+        <from tile="R4:C2" />
+      </frame>
+      <frame>
+        <from tile="R4:C3" />
+      </frame>
+    </set>
+    <set action="explosion">
+      <file>interactables.png</file>
+      <frame>
+        <from tile="R1:C0" />
+      </frame>
+      <frame>
+        <from tile="R1:C1" />
+      </frame>
+      <frame>
+        <from tile="R1:C2" />
+      </frame>
+      <frame>
+        <from tile="R1:C3" />
       </frame>
     </set>
   </group>
