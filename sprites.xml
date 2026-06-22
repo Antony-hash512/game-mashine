@@ -103,6 +103,12 @@
     </set>
   </group>
   <group object="coin">
+    <set action="static">
+      <file>tileset_grass.png</file>
+      <frame>
+        <from tile="R4:C0" />
+      </frame>
+    </set>
     <set action="rotation">
       <file>tileset_grass.png</file>
       <frame>
