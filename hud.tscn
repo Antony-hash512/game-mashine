@@ -35,11 +35,8 @@ alignment = 1
 [node name="CoinIcon" type="TextureRect" parent="MarginContainer/PanelContainer/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-texture = ExtResource("2_texture")
 expand_mode = 1
 stretch_mode = 5
-region_enabled = true
-region_rect = Rect2(0, 720, 180, 180)
 
 [node name="CoinLabel" type="Label" parent="MarginContainer/PanelContainer/HBoxContainer"]
 layout_mode = 2
