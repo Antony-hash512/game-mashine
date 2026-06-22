@@ -50,6 +50,7 @@
       <spf>0.12</spf>
       <frame>
         <center>R3:C1</center>
+        <top>R2</top>
       </frame>
     </set>
     <set action="falling">
@@ -65,6 +66,7 @@
       <spf>0.12</spf>
       <frame>
         <center>R3:C4</center>
+        <top>R2</top>
         <left>C3</left>
         <right>C5</right>
       </frame>
