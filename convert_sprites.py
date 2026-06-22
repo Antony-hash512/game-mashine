@@ -125,19 +125,23 @@ def validate_and_convert():
                         
                 elif child.tag == "frame":
                     # Парсим структуру кадра
-                    center_elem = child.find("center")
-                    if center_elem is None:
-                        print(f"[Ошибка] Каждый <frame> в экшене '{action_name}' группы '{object_name}' обязан содержать тег <center>")
+                    from_elem = child.find("from")
+                    if from_elem is None:
+                        print(f"[Ошибка] Каждый <frame> в экшене '{action_name}' группы '{object_name}' обязан содержать тег <from>")
                         sys.exit(1)
                         
-                    center_text = (center_elem.text or "").strip()
+                    from_text = from_elem.attrib.get("tile", "").strip()
+                    if not from_text:
+                        print(f"[Ошибка] Тег <from> в экшене '{action_name}' группы '{object_name}' обязан иметь заполненный атрибут 'tile' (например, <from tile=\"R1:C0\" />)")
+                        sys.exit(1)
+                        
                     try:
-                        c_row, c_col = parse_coord(center_text)
+                        c_row, c_col = parse_coord(from_text)
                         if c_row is None or c_col is None:
-                            print(f"[Ошибка] Тег <center> ('{center_text}') должен содержать и строку, и колонку (например, 'R1:C0')")
+                            print(f"[Ошибка] Атрибут 'tile' ('{from_text}') тега <from> должен содержать и строку, и колонку (например, 'R1:C0')")
                             sys.exit(1)
                     except ValueError as e:
-                        print(f"[Ошибка] Ошибка парсинга <center> в экшене '{action_name}' группы '{object_name}': {e}")
+                        print(f"[Ошибка] Ошибка парсинга атрибута 'tile' в <from> в экшене '{action_name}' группы '{object_name}': {e}")
                         sys.exit(1)
                         
                     # Смещения по умолчанию
@@ -148,7 +152,7 @@ def validate_and_convert():
                     
                     # Проверяем дочерние теги внутри <frame>
                     for sub in child:
-                        if sub.tag == "center":
+                        if sub.tag == "from":
                             continue
                         elif sub.tag == "extend":
                             # Парсим атрибуты смещения

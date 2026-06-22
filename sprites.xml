@@ -5,11 +5,11 @@
       <file>player_alt.png</file>
       <fps>2</fps>
       <frame>
-        <center>R1:C0</center>
+        <from tile="R1:C0" />
         <extend top="1" />
       </frame>
       <frame>
-        <center>R1:C1</center>
+        <from tile="R1:C1" />
         <extend top="1" />
       </frame>
     </set>
@@ -17,51 +17,51 @@
       <file>player_alt.png</file>
       <fps>8.33</fps>
       <frame>
-        <center>R1:C2</center>
+        <from tile="R1:C2" />
         <extend top="1" />
       </frame>
       <frame>
-        <center>R1:C3</center>
+        <from tile="R1:C3" />
         <extend top="1" />
       </frame>
       <frame>
-        <center>R1:C4</center>
+        <from tile="R1:C4" />
         <extend top="1" />
       </frame>
       <frame>
-        <center>R1:C5</center>
+        <from tile="R1:C5" />
         <extend top="1" />
       </frame>
       <frame>
-        <center>R1:C6</center>
+        <from tile="R1:C6" />
         <extend top="1" />
       </frame>
     </set>
     <set action="jumping_start">
       <file>player_alt.png</file>
       <frame>
-        <center>R3:C0</center>
+        <from tile="R3:C0" />
         <extend top="1" />
       </frame>
     </set>
     <set action="jumping_top_point">
       <file>player_alt.png</file>
       <frame>
-        <center>R3:C1</center>
+        <from tile="R3:C1" />
         <extend top="1" />
       </frame>
     </set>
     <set action="falling">
       <file>player_alt.png</file>
       <frame>
-        <center>R3:C2</center>
+        <from tile="R3:C2" />
         <extend top="1" />
       </frame>
     </set>
     <set action="landing">
       <file>player_alt.png</file>
       <frame>
-        <center>R3:C4</center>
+        <from tile="R3:C4" />
         <extend top="1" left="1" right="1" />
       </frame>
     </set>
