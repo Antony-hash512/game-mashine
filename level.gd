@@ -10,6 +10,11 @@ const TILE_SIZE = 180
 var map_cols: int = 0
 var map_rows: int = 0
 
+# Переменные для монет и HUD
+var collected_coins: int = 0
+var total_coins: int = 0
+var hud: CanvasLayer = null
+
 @onready var tile_map_layer: TileMapLayer = $TileMapLayer
 @onready var music_player: AudioStreamPlayer = $MusicPlayer
 
@@ -20,7 +25,10 @@ func _ready() -> void:
 	# 2. Загрузка и парсинг уровня
 	load_level()
 
-	# 3. Запуск фоновой музыки
+	# 3. Инициализация HUD
+	setup_hud()
+
+	# 4. Запуск фоновой музыки
 	if music_player:
 		music_player.play()
 		# Автоматически зацикливаем музыку при завершении
@@ -134,6 +142,10 @@ func parse_level_data(level_text: String) -> void:
 	var player_spawn_pos = Vector2.ZERO
 	var has_player = false
 
+	# Сбрасываем счетчики монет при парсинге уровня
+	collected_coins = 0
+	total_coins = 0
+
 	# Заполняем сетку
 	for y in range(map_rows):
 		var line = lines[y]
@@ -149,6 +161,9 @@ func parse_level_data(level_text: String) -> void:
 					# Точка спавна игрока (центр ячейки)
 					player_spawn_pos = Vector2(x * TILE_SIZE + TILE_SIZE / 2.0, y * TILE_SIZE + TILE_SIZE / 2.0)
 					has_player = true
+				'o':
+					# Спавн монеты
+					spawn_coin(Vector2(x * TILE_SIZE + TILE_SIZE / 2.0, y * TILE_SIZE + TILE_SIZE / 2.0))
 
 	# Создаем игрока и ставим его на позицию спавна
 	if has_player:
@@ -171,6 +186,30 @@ func spawn_player(pos: Vector2) -> void:
 		add_child(player)
 	else:
 		push_error("Не удалось загрузить player.tscn!")
+
+func spawn_coin(pos: Vector2) -> void:
+	var coin_scene = load("res://coin.tscn")
+	if coin_scene:
+		var coin = coin_scene.instantiate()
+		coin.global_position = pos
+		add_child(coin)
+		total_coins += 1
+	else:
+		push_error("Не удалось загрузить coin.tscn!")
+
+func setup_hud() -> void:
+	var hud_scene = load("res://hud.tscn")
+	if hud_scene:
+		hud = hud_scene.instantiate()
+		add_child(hud)
+		hud.update_coins(collected_coins, total_coins)
+	else:
+		push_error("Не удалось загрузить hud.tscn!")
+
+func collect_coin() -> void:
+	collected_coins += 1
+	if hud:
+		hud.update_coins(collected_coins, total_coins)
 
 func _physics_process(_delta: float) -> void:
 	# Реализация бесшовного зацикливания (wrapping) слева и справа
