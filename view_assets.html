@@ -38,6 +38,18 @@
       z-index: 10;
       border-radius: 3px;
       border: 1px solid #088;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .cell-label:hover {
+      background: #088;
+      color: #fff;
+    }
+    .cell-label.copied {
+      background: #0f5;
+      color: #000;
+      border-color: #0f5;
     }
   </style>
 </head>
@@ -86,7 +98,22 @@
             
             const label = document.createElement('div');
             label.className = 'cell-label';
-            label.textContent = `R${r}:C${c}`;
+            const coordText = `R${r}:C${c}`;
+            label.textContent = coordText;
+            
+            label.addEventListener('click', () => {
+              navigator.clipboard.writeText(coordText).then(() => {
+                label.textContent = 'Copied!';
+                label.classList.add('copied');
+                setTimeout(() => {
+                  label.textContent = coordText;
+                  label.classList.remove('copied');
+                }, 600);
+              }).catch(err => {
+                console.error('Failed to copy: ', err);
+              });
+            });
+            
             cell.appendChild(label);
             
             const img = document.createElement('img');
