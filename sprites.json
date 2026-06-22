@@ -2,7 +2,7 @@
     "player": {
         "idle": {
             "file": "player_alt.png",
-            "spf": 0.12,
+            "spf": 0.5,
             "frames": [
                 [
                     0,

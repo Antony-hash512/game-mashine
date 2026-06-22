@@ -3,7 +3,7 @@
   <group object="player">
     <set action="idle">
       <file>player_alt.png</file>
-      <spf>0.12</spf>
+      <fps>2</fps>
       <frame>
         <center>R1:C0</center>
         <top>R0</top>
@@ -15,7 +15,7 @@
     </set>
     <set action="running">
       <file>player_alt.png</file>
-      <spf>0.12</spf>
+      <fps>8.33</fps>
       <frame>
         <center>R1:C2</center>
         <top>R0</top>
