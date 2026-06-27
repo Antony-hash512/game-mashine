@@ -21,32 +21,8 @@
         <extend top="1" />
       </frame>
       <frame>
-        <from tile="R5:C1" />
-        <extend top="1" />
-      </frame>
-      <frame>
-        <from tile="R5:C2" />
-        <extend top="1" />
-      </frame>
-      <frame>
-        <from tile="R5:C3" />
-        <extend top="1" />
-      </frame>
-      <frame>
-        <from tile="R5:C4" />
-        <extend top="1" />
-      </frame>
-      <frame>
-        <from tile="R5:C5" />
-        <extend top="1" />
-      </frame>
-      <frame>
-        <from tile="R5:C6" />
-        <extend top="1" />
-      </frame>
-      <frame>
-        <from tile="R5:C7" />
-        <extend top="1" />
+        <from tile="same:next" repeat="7" />
+        <extend top="1" repeat="7" />
       </frame>
     </set>
     <!--set action="running_unused1">

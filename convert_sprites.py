@@ -14,23 +14,56 @@ XML_PATH = "sprites.xml"
 JSON_PATH = "sprites.json"
 ASSETS_DIR = os.path.join("assets", "images")
 
-# Регулярное выражение для парсинга координат (например, R1:C0, R0, C3)
-COORD_RE = re.compile(r'^(?:R(?P<row>\d+))?:?(?:C(?P<col>\d+))?$')
-
 def parse_coord(coord_str, default_row=None, default_col=None):
     if not coord_str:
         return None, None
     
     coord_str = coord_str.strip()
-    match = COORD_RE.match(coord_str)
-    if not match:
-        raise ValueError(f"Некорректный формат координаты: '{coord_str}'. Должно быть вроде 'R1:C0', 'R0' или 'C3'")
     
-    row_str = match.group('row')
-    col_str = match.group('col')
-    
-    row = int(row_str) if row_str is not None else default_row
-    col = int(col_str) if col_str is not None else default_col
+    # Разделяем по двоеточию, если оно есть
+    if ":" in coord_str:
+        parts = coord_str.split(":")
+        if len(parts) != 2:
+            raise ValueError(f"Некорректный формат координаты: '{coord_str}'. Должно быть ровно два элемента, разделенных двоеточием.")
+        row_part, col_part = parts[0].strip(), parts[1].strip()
+    else:
+        # Если двоеточия нет, это может быть R5, C3, Rsame, Cnext и т.д.
+        row_part, col_part = None, None
+        if coord_str.startswith("R"):
+            row_part = coord_str
+        elif coord_str.startswith("C"):
+            col_part = coord_str
+        else:
+            raise ValueError(f"Некорректный формат координаты: '{coord_str}'. Должен начинаться с R или C, либо содержать двоеточие.")
+
+    def resolve_part(part, last_val, prefix):
+        if part is None:
+            return last_val
+            
+        # Удаляем префикс, если он есть
+        if part.startswith(prefix):
+            part = part[len(prefix):]
+            
+        if part == "same":
+            if last_val is None:
+                raise ValueError(f"Невозможно использовать 'same' для {prefix} без предыдущего значения")
+            return last_val
+        elif part == "next":
+            if last_val is None:
+                raise ValueError(f"Невозможно использовать 'next' для {prefix} без предыдущего значения")
+            return last_val + 1
+        elif part == "prev":
+            if last_val is None:
+                raise ValueError(f"Невозможно использовать 'prev' для {prefix} без предыдущего значения")
+            return last_val - 1
+        else:
+            try:
+                return int(part)
+            except ValueError:
+                raise ValueError(f"Неверный формат числового значения '{part}' для {prefix}")
+
+    row = resolve_part(row_part, default_row, "R")
+    col = resolve_part(col_part, default_col, "C")
     
     if row is None and col is None:
         raise ValueError(f"Координата '{coord_str}' должна содержать как минимум строку (R) или колонку (C)")
@@ -90,6 +123,8 @@ def validate_and_convert():
                 "spf": None,
                 "frames": []
             }
+            last_row = None
+            last_col = None
             
             # Читаем содержимое <set>
             file_name = None
@@ -135,15 +170,16 @@ def validate_and_convert():
                         print(f"[Ошибка] Тег <from> в экшене '{action_name}' группы '{object_name}' обязан иметь заполненный атрибут 'tile' (например, <from tile=\"R1:C0\" />)")
                         sys.exit(1)
                         
-                    try:
-                        c_row, c_col = parse_coord(from_text)
-                        if c_row is None or c_col is None:
-                            print(f"[Ошибка] Атрибут 'tile' ('{from_text}') тега <from> должен содержать и строку, и колонку (например, 'R1:C0')")
-                            sys.exit(1)
-                    except ValueError as e:
-                        print(f"[Ошибка] Ошибка парсинга атрибута 'tile' в <from> в экшене '{action_name}' группы '{object_name}': {e}")
-                        sys.exit(1)
-                        
+                    # Определяем количество повторений (по умолчанию 1)
+                    repeat_count = 1
+                    for sub in child:
+                        if "repeat" in sub.attrib:
+                            try:
+                                repeat_count = max(repeat_count, int(sub.attrib["repeat"]))
+                            except ValueError:
+                                print(f"[Ошибка] Значение 'repeat' должно быть целым числом в экшене '{action_name}' группы '{object_name}'")
+                                sys.exit(1)
+                                
                     # Смещения по умолчанию
                     top_offset = 0
                     bottom_offset = 0
@@ -157,10 +193,12 @@ def validate_and_convert():
                         elif sub.tag == "extend":
                             # Парсим атрибуты смещения
                             for attr, val in sub.attrib.items():
-                                if attr not in ("top", "bottom", "left", "right"):
+                                if attr not in ("top", "bottom", "left", "right", "repeat"):
                                     print(f"[Ошибка] Неизвестный атрибут '{attr}' в теге <extend> в экшене '{action_name}' группы '{object_name}'")
                                     sys.exit(1)
                                 try:
+                                    if attr == "repeat":
+                                        continue
                                     int_val = int(val)
                                     if int_val < 0:
                                         print(f"[Ошибка] Значение атрибута '{attr}' в <extend> в экшене '{action_name}' группы '{object_name}' должно быть положительным (найдено: {val})")
@@ -181,19 +219,33 @@ def validate_and_convert():
                             print(f"[Ошибка] Неизвестный тег <{sub.tag}> внутри <frame> в экшене '{action_name}' группы '{object_name}'")
                             sys.exit(1)
                             
-                    # Вычисляем объединяющий Bounding Box в пикселях
-                    min_row = c_row - top_offset
-                    max_row = c_row + bottom_offset
-                    min_col = c_col - left_offset
-                    max_col = c_col + right_offset
-                    
-                    x = min_col * CELL_W
-                    y = min_row * CELL_H
-                    w = (max_col - min_col + 1) * CELL_W
-                    h = (max_row - min_row + 1) * CELL_H
-                    
-                    # Записываем регион кадра [x, y, width, height]
-                    action_data["frames"].append([x, y, w, h])
+                    for _ in range(repeat_count):
+                        try:
+                            c_row, c_col = parse_coord(from_text, last_row, last_col)
+                            if c_row is None or c_col is None:
+                                print(f"[Ошибка] Атрибут 'tile' ('{from_text}') тега <from> должен содержать и строку, и колонку (например, 'R1:C0')")
+                                sys.exit(1)
+                        except ValueError as e:
+                            print(f"[Ошибка] Ошибка парсинга атрибута 'tile' в <from> в экшене '{action_name}' группы '{object_name}': {e}")
+                            sys.exit(1)
+                            
+                        # Обновляем последние координаты
+                        last_row = c_row
+                        last_col = c_col
+                        
+                        # Вычисляем объединяющий Bounding Box в пикселях
+                        min_row = c_row - top_offset
+                        max_row = c_row + bottom_offset
+                        min_col = c_col - left_offset
+                        max_col = c_col + right_offset
+                        
+                        x = min_col * CELL_W
+                        y = min_row * CELL_H
+                        w = (max_col - min_col + 1) * CELL_W
+                        h = (max_row - min_row + 1) * CELL_H
+                        
+                        # Записываем регион кадра [x, y, width, height]
+                        action_data["frames"].append([x, y, w, h])
                 else:
                     print(f"[Ошибка] Неизвестный тег <{child.tag}> внутри <set> в экшене '{action_name}' группы '{object_name}'")
                     sys.exit(1)
